@@ -8,14 +8,11 @@ from flask_cors import CORS
 from app.blueprints.images import img_bp
 from app.extensions import db, migrate, ma
 from app.settings import config
+from dotenv import load_dotenv
 
 
-basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-
-
-# dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
-# if os.path.exists(dotenv_path):
-#     load_dotenv(dotenv_path)
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, ".env"))
 
 
 def create_app(enviroment="development"):
