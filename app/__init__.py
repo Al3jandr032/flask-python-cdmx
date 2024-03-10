@@ -4,12 +4,18 @@ from flask import Flask
 
 from flask_cors import CORS
 
-from app.blueprints.api import api_bp
-from app.extensions import db, migrate
+# from app.blueprints.api import api_bp
+from app.blueprints.images import img_bp
+from app.extensions import db, migrate, ma
 from app.settings import config
 
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
+
+# dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+# if os.path.exists(dotenv_path):
+#     load_dotenv(dotenv_path)
 
 
 def create_app(enviroment="development"):
@@ -35,7 +41,10 @@ def register_extensions(app):
     )
     db.init_app(app)
     migrate.init_app(app, db)
+    ma.init_app(app)
 
 
 def register_blueprints(app):
-    app.register_blueprint(api_bp, url_prefix="/api")
+    # app.register_blueprint(api_bp, url_prefix="/api")
+
+    app.register_blueprint(img_bp, url_prefix="/api")
