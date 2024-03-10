@@ -1,5 +1,6 @@
 from app.extensions import db
 from app.extensions import ma
+from datetime import datetime
 
 
 class Image(db.Model):
@@ -12,6 +13,15 @@ class Image(db.Model):
     )
     edit_date = db.Column(db.DateTime(timezone=True), nullable=True)
     deleted = db.Column(db.Boolean, default=True)
+
+    def __init__(self, path, content_type) -> None:
+        super().__init__()
+        self.path = path
+        self.content_type = content_type
+        self._hash = ""
+        self.create_date = datetime.now()
+        self.edit_date = None
+        self.deleted = False
 
 
 class ImageSchema(ma.SQLAlchemySchema):

@@ -1,5 +1,9 @@
 from io import BytesIO
 from minio.error import S3Error
+from collections import namedtuple
+
+UploadResult = namedtuple("UploadResult", "success status data")
+DownloadResult = namedtuple("DownloadResult", "success status data")
 
 
 class FileHandler:
@@ -36,16 +40,39 @@ class FileHandler:
                 print("Bucket", self.bucket_name, "already exists")
 
             # Upload the file data to Minio
-            self.minio_client.put_object(
+            writeResult = self.minio_client.put_object(
                 self.bucket_name,
                 file.filename,
                 BytesIO(file_data),
                 length=len(file_data),
                 content_type=file.content_type,
             )
-
-            return {"message": "File uploaded successfully!"}, 201
+            result = UploadResult(
+                True,
+                "File uploaded successfully!",
+                {
+                    "name": writeResult.object_name,
+                    "etag": writeResult.etag,
+                    "version_id": writeResult.version_id,
+                },
+            )
+            print(result)
+            return result
         except S3Error as e:
-            return {"error": f"Error uploading file: {e}"}, 500
+            return UploadResult(False, f"Error uploading file: {e}", None)
         except Exception as e:
-            return {"error": f"Unexpected error: {e}"}, 500
+            return UploadResult(False, f"Unexpected error: {e}", None)
+
+    def download_file(self, name):
+        try:
+            object_data = None
+
+            with self.minio_client.get_object(self.bucket_name, name) as min_obj:
+                object_data = BytesIO(min_obj.read())
+
+            result = DownloadResult(True, "File downloaded successfully!", object_data)
+            return result
+        except S3Error as e:
+            return DownloadResult(False, f"Error uploading file: {e}", None)
+        except Exception as e:
+            return DownloadResult(False, f"Unexpected error: {e}", None)
