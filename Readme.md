@@ -1,7 +1,10 @@
 # Flask Api REST
 
-Este repositorio contiene el codigo
+Este proyecto muestra un ejemplo de un api sencillo utilizando Flask
 
+[Python](https://www.python.org/)
+[Pillow](https://python-pillow.org/)
+[Flask](https://flask.palletsprojects.com/en/3.0.x/)
 
 ## Install flask
 
@@ -153,3 +156,74 @@ $ pip install minio
 
 
 # Image RESt api
+El api RestApi permite cargar imagenes para aplicarles filtros 
+
+## Endpoint: GET /images
+
+Listar las imagenes.
+
+### Request
+
+- **Method:** GET
+- **Endpoint:** `/images`
+
+### Response
+
+- **Status Code:** 200 OK
+- **Response Body:**
+```json
+[
+    {
+        "_hash": "",
+        "content_type": "image/jpeg",
+        "create_date": "2024-03-11T23:53:37.798307",
+        "deleted": false,
+        "edit_date": null,
+        "id": 1,
+        "path": "download.jpeg"
+    }
+]
+```
+
+
+
+
+
+
+## Test
+
+```bash
+pip install pytest
+```
+En la raiz de proyecto genera la carpeta test con el contenido como sigue:
+
+```bash
+`-- test
+    |-- __init__.py
+    |-- conftest.py
+    `-- test_app.py
+```
+
+En el archivo conftest.py se configura lo necesario para crear una app con
+configuracion de testing, esto incluye una base de datos en memoria
+
+```python
+
+@pytest.fixture()
+def app():
+    # App con configuracion de testing
+    app = create_app("testing")
+
+    with app.app_context():
+        db.create_all()
+        # Poblar la base de datos para las pruebas
+        img = Image("test.png", "image/png")
+        db.session.add(img)
+        db.session.commit()
+    yield app
+
+
+@pytest.fixture()
+def client(app):
+    return app.test_client()
+```
