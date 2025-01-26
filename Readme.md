@@ -156,7 +156,7 @@ $ pip install minio
 
 
 # Image RESt api
-El api RestApi permite cargar imagenes para aplicarles filtros 
+El api RestApi permite cargar imagenes para aplicarles filtros
 
 ## Endpoint: GET /images
 

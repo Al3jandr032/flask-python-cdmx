@@ -1,6 +1,6 @@
 import os
 from minio import Minio
-from app.utils.FileHandler import FileHandler
+from app.utils.file_handler import FileHandler
 
 # Initialize Minio client
 minio_client = Minio(
@@ -9,9 +9,5 @@ minio_client = Minio(
     secret_key=os.getenv("MINIO_SECRET_KEY"),
     secure=False,
 )
-
-
-bucket_name = "images"
-
-
-file_handler = FileHandler(minio_client, bucket_name)
+BUCKET_NAME = "images"
+file_handler = FileHandler(minio_client, BUCKET_NAME)

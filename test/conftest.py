@@ -1,7 +1,7 @@
 import pytest
 from app import create_app
 from app.extensions import db
-from app.models.Image import Image
+from app.models.image import Image
 
 
 @pytest.fixture()

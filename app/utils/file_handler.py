@@ -1,21 +1,26 @@
 from io import BytesIO
-from minio.error import S3Error
 from collections import namedtuple
+
+from minio.error import S3Error
+
 
 UploadResult = namedtuple("UploadResult", "success status data")
 DownloadResult = namedtuple("DownloadResult", "success status data")
+ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 
 class FileHandler:
-    def __init__(
-        self,
-        minio_client,
-        bucket_name,
-        allowed_extensions={"png", "jpg", "jpeg", "gif"},
-    ):
+    """
+    FileHandler class
+    Manage the operations related with files images
+    """
+
+    def __init__(self, minio_client, bucket_name, allowed_extensions=None):
         self.minio_client = minio_client
         self.bucket_name = bucket_name
         self.allowed_extensions = allowed_extensions
+        if allowed_extensions is None:
+            self.allowed_extensions = ALLOWED_EXTENSIONS
 
     def allowed_file(self, filename):
         return (
@@ -40,7 +45,7 @@ class FileHandler:
                 print("Bucket", self.bucket_name, "already exists")
 
             # Upload the file data to Minio
-            writeResult = self.minio_client.put_object(
+            write_result = self.minio_client.put_object(
                 self.bucket_name,
                 file.filename,
                 BytesIO(file_data),
@@ -51,9 +56,9 @@ class FileHandler:
                 True,
                 "File uploaded successfully!",
                 {
-                    "name": writeResult.object_name,
-                    "etag": writeResult.etag,
-                    "version_id": writeResult.version_id,
+                    "name": write_result.object_name,
+                    "etag": write_result.etag,
+                    "version_id": write_result.version_id,
                 },
             )
             print(result)
