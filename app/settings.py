@@ -1,7 +1,9 @@
 import os
 
 
-class BaseConfig(object):
+class BaseConfig:
+    """Base configuration class"""
+
     SECRET_KEY = os.getenv("SECRET_KEY", "dev key")
 
     DEBUG_TB_INTERCEPT_REDIRECTS = False
@@ -13,6 +15,8 @@ class BaseConfig(object):
 
 
 class DevelopmentConfig(BaseConfig):
+    """Development configuration class"""
+
     name = "app.db"
 
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{name}"
@@ -21,6 +25,8 @@ class DevelopmentConfig(BaseConfig):
 
 
 class TestingConfig(BaseConfig):
+    """Testing configuration class"""
+
     TESTING = True
     WTF_CSRF_ENABLED = False
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"  # in-memory database
@@ -28,6 +34,8 @@ class TestingConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
+    """Production configuration class"""
+
     name = "postgres"
     passwrd = "password"
     db = "app_db"

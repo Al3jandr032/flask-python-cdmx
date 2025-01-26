@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from app.extensions import db
 from app.extensions import ma
-from datetime import datetime
 
 
 class Image(db.Model):
+    """Image entity"""
+
     id = db.Column(db.Integer, primary_key=True)
     path = db.Column(db.String(60), nullable=False)
     _hash = db.Column(db.String(60), nullable=False)
@@ -25,7 +28,11 @@ class Image(db.Model):
 
 
 class ImageSchema(ma.SQLAlchemySchema):
+    """Image Schema"""
+
     class Meta:
+        """Meta class"""
+
         model = Image
 
     id = ma.auto_field()

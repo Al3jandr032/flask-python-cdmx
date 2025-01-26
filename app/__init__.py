@@ -1,14 +1,15 @@
+"""App module for flask app."""
+
 import os
 
 from flask import Flask
-
 from flask_cors import CORS
+from dotenv import load_dotenv
 
 # from app.blueprints.api import api_bp
 from app.blueprints.images import img_bp
 from app.extensions import db, migrate, ma
 from app.settings import config
-from dotenv import load_dotenv
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -16,6 +17,9 @@ load_dotenv(os.path.join(basedir, ".env"))
 
 
 def create_app(enviroment="development"):
+    """
+    Create a flask app and configure it
+    """
     app = Flask("restApi")
     app.config.from_object(config[enviroment])
 
@@ -26,6 +30,9 @@ def create_app(enviroment="development"):
 
 
 def register_extensions(app):
+    """
+    Register extensions on the app instance
+    """
     CORS(
         app,
         origins="*",
@@ -42,6 +49,8 @@ def register_extensions(app):
 
 
 def register_blueprints(app):
+    """
+    Register blueprints on the app instance
+    """
     # app.register_blueprint(api_bp, url_prefix="/api")
-
     app.register_blueprint(img_bp, url_prefix="/api")
